@@ -1,1 +1,828 @@
 
+<!DOCTYPE html>
+<html lang="en">
+  <title>B-Group File Share Web Service</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+  <link
+    href="https://fonts.googleapis.com/css?family=RobotoDraft"
+    rel="stylesheet"
+    type="text/css"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+  /><style>
+    html,
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      font-family: "RobotoDraft", "Roboto", sans-serif;
+    }
+    .w3-bar-block .w3-bar-item {
+      padding: 16px;
+    }
+	.w3-table {
+	  margin-top: 0px;
+      margin-bottom: 30px;
+	}
+    #hr {
+      border-top: dashed 3px grey;
+    }
+    .files {
+      border: 1.5px solid grey;
+      border-radius: 5px;
+      width: 150px;
+      height: 30px;
+
+      cursor: pointer;
+      float: left;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+	.ModLog{
+	  padding-right: 35px;
+	  padding-left: 35px;
+	}
+	
+	aside {
+	position: absolute;
+	top: 570px;
+	left: 700px;
+	width: 25%;
+	height: auto;
+	padding-left: 15px;
+	<!-- margin-left: 15px; -->
+	float: right;
+	
+	background-color: lightgray;
+}
+
+    #aside_title{
+	text-align: center;
+	
+	}
+
+  </style>
+  <body>
+    <!-- Side Navigation -->
+    <nav
+      class="w3-sidebar w3-bar-block w3-collapse w3-white w3-animate-left w3-card"
+      style="z-index:3;width:320px;"
+      id="mySidebar"
+    >
+      <a
+        href="javascript:void(0)"
+        class="w3-bar-item w3-button w3-border-bottom w3-large"
+        ><i class="fa fa-edit"></i> &nbsp; CS345<br />
+       B-Group File Share Web Service
+        <span
+          ><img
+            src="https://www.w3schools.com/images/w3schools.png"
+            style="width:30%"
+        /></span>
+        </a
+      >
+      <a
+        href="javascript:void(0)"
+        onclick="w3_close()"
+        title="Close Sidemenu"
+        class="w3-bar-item w3-button w3-hide-large w3-large"
+        >Close <i class="fa fa-remove"></i
+      ></a>
+      <a
+        href="javascript:void(0)"
+        class="w3-bar-item w3-button w3-dark-grey w3-button w3-hover-black w3-left-align"
+        onclick="document.getElementById('id01').style.display='block'"
+        >Share File <i class="w3-padding fa fa-pencil"></i
+      ></a>
+      <a
+        id="myBtn"
+        onclick="myFunc('Demo1')"
+        href="javascript:void(0)"
+        class="w3-bar-item w3-button"
+        ><i class="fa fa-inbox w3-margin-right"></i>Files (3)<i
+          class="fa fa-caret-down w3-margin-left"
+        ></i
+      ></a>
+      <div id="Demo1" class="w3-hide w3-animate-left">
+        <a
+          href="javascript:void(0)"
+          class="w3-bar-item w3-button w3-border-bottom test w3-hover-light-grey"
+          onclick="doShare('File1');w3_close();"
+          id="firstTab"
+        >
+          <div class="w3-container">
+            <img
+              class="w3-round w3-margin-right"
+              src="./fileIcon3.png"
+              style="width:15%;"
+            /><span class="w3-opacity w3-large">File 1</span>
+            <h6>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</h6>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+          </div>
+        </a>
+        <a
+          href="javascript:void(0)"
+          class="w3-bar-item w3-button w3-border-bottom test w3-hover-light-grey"
+          onclick="doShare('File2');w3_close();"
+        >
+          <div class="w3-container">
+            <img
+              class="w3-round w3-margin-right"
+              src="./fileIcon5.png"
+              style="width:15%;"
+            /><span class="w3-opacity w3-large">File 2</span>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+          </div>
+        </a>
+        <a
+          href="javascript:void(0)"
+          class="w3-bar-item w3-button w3-border-bottom test w3-hover-light-grey"
+          onclick="doShare('File3');w3_close();"
+        >
+          <div class="w3-container">
+            <img
+              class="w3-round w3-margin-right"
+              src="./fileIcon2.png"
+              style="width:15%;"
+            /><span class="w3-opacity w3-large">File 3</span>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+          </div>
+        </a>
+      </div>
+      <a
+        href="#"
+        class="w3-bar-item w3-button"
+        onclick="document.getElementById('file-screen').style.display='none';document.getElementById('shared-file-screen').style.display='block';w3_close();"
+        ><i class="fa fa-history w3-margin-right"></i>Shared File Drive</a
+      >
+      <a href="#" class="w3-bar-item w3-button"
+        ><i class="fa fa-hourglass-end w3-margin-right"></i>Draft Files</a
+      >
+      <a href="#" class="w3-bar-item w3-button"
+        ><i class="fa fa-trash w3-margin-right"></i>Trash</a
+      >
+    </nav>
+
+    <!-- Modal that pops up when you click on "Share File" -->
+    <div id="id01" class="w3-modal" style="z-index:4">
+      <div class="w3-modal-content w3-animate-zoom">
+        <div class="w3-container w3-padding w3-red">
+          <span
+            onclick="document.getElementById('id01').style.display='none'"
+            class="w3-button w3-red w3-right w3-xxlarge"
+            ><i class="fa fa-remove"></i
+          ></span>
+          <h2>Share File</h2>
+        </div>
+        <div class="w3-panel">
+          <h4>Link Sharing</h4>
+          <a href="#">learn more</a> about link sharing <br /><br />
+          <div class="w3-card-4" style="width:100%">
+            <header class="w3-container w3-light-grey">
+              <h4>Anyone with the link <b>can edit</b></h4>
+            </header>
+            <div class="w3-container">
+              <img
+                src="./fileIcon1.png"
+                class="w3-left w3-margin-right"
+                style="width:30px; margin-top: 10px"
+              />
+              <p>File1.txt</p>
+              <hr />
+              <p>https://mydoc.shareme.co.nz/file1.txt/id/Shsi7SHYA7AS62YU</p>
+            </div>
+            <button
+              class="w3-button w3-block w3-dark-grey"
+              onclick="alert('Copied Successfully!')"
+            >
+              Copy Link
+            </button>
+          </div>
+          <br />
+          <hr id="hr" />
+          <label><b>To</b></label>
+          <input
+            placeholder="Type in an email address or select a name from your group below"
+            id="email"
+            class="w3-input w3-border w3-margin-bottom"
+            type="text"
+          />
+          <label>To People in my Group -- CS345 Group 12</label><br />
+          <input type="checkbox" id="Jason" onchange="addEmail('Jason')" /> Jason
+          <br />
+          <input type="checkbox" id="Ming" onchange="addEmail('Ming')" /> Ming
+          <br />
+          <input type="checkbox" id="Lucy" onchange="addEmail('Lucy')" />
+          Lucy <br /><br />
+          <label>From</label>
+
+          <p>
+            <input name="email" type="radio" checked="true" />
+            dsah903@aucklanduni.ac.nz (my uni email)
+          </p>
+          <p>
+            <input type="radio" name="email" /> dajshd@yahoo.com (my personal
+            email)
+          </p>
+          <label>File</label>
+          <select>
+            <option value="File1.txt" selected>File1.txt</option>
+            <option value="File2.html">File2.html</option>
+            <option value="File3.png">File3.png</option>
+          </select>
+          <br />
+          <br />
+          <input
+            class="w3-input w3-border w3-margin-bottom"
+            style="height:150px"
+            placeholder="Message"
+          />
+          <br />
+          <input type="checkbox" /> Skip sending notifications
+          <div class="w3-section">
+            <a
+              class="w3-button w3-red"
+              onclick="document.getElementById('id01').style.display='none'"
+              >Cancel <i class="fa fa-remove"></i
+            ></a>
+            <a
+              class="w3-button w3-light-grey w3-right"
+              onclick="document.getElementById('id01').style.display='none';alert('File Shared Successfully!');"
+              >Share <i class="fa fa-paper-plane"></i
+            ></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal that pops up when you click on "single shared file" -->
+    <div id="id02" class="w3-modal" style="z-index:4">
+      <div class="w3-modal-content w3-animate-zoom">
+        <div class="w3-container w3-padding w3-red">
+          <span
+            onclick="document.getElementById('id02').style.display='none'"
+            class="w3-button w3-red w3-right w3-xxlarge"
+            ><i class="fa fa-remove"></i
+          ></span>
+          <h2>Share History Details</h2>
+          <div class="w3-panel w3-light-grey" style="width:100%">
+            <p>Receiver: Bob</p>
+            <p>Time: 15:23 29/05/2020</p>
+          </div>
+        </div>
+      </div>
+    </div>
+	
+	  <!-- Modal that pops up when you click on "single Modification file"    ---------------------------------     -->
+	  <div id="id07" class="w3-modal" style="z-index:4">
+      <div class="w3-modal-content w3-animate-zoom">
+        <div class="w3-container w3-padding w3-red">
+          <span
+            onclick="document.getElementById('id07').style.display='none'"
+            class="w3-button w3-red w3-right w3-xxlarge"
+            ><i class="fa fa-remove"></i
+          ></span>
+          <h2>Modification History Details</h2>
+          <div class="w3-panel w3-light-grey" style="width:100%">
+            <p>Modifier: Amy</p>
+            <p>Time: 15:23 29/05/2020</p>
+			<p>Description: Add interview tasks </p>
+			</br>
+			<p>Modifier: James</p>
+            <p>Time: 17:23 30/05/2020</p>
+			<p>description: Delete consent form </p>
+			</br>
+			<p>Modifier: Jackson</p>
+            <p>Time: 19:23 30/05/2020</p>
+			<p>description: Edit prototype </p>
+          </div>
+        </div>
+      </div>
+    </div>
+	  
+	
+
+    <!-- Overlay effect when opening the side navigation on small screens -->
+    <div
+      class="w3-overlay w3-hide-large w3-animate-opacity"
+      onclick="w3_close()"
+      style="cursor:pointer"
+      title="Close Sidemenu"
+      id="myOverlay"
+    ></div>
+
+    <!-- Page content -->
+
+    <div class="w3-main" style="margin-left:320px;">
+      <i
+        class="fa fa-bars w3-button w3-white w3-hide-large w3-xlarge w3-margin-left w3-margin-top"
+        onclick="w3_open()"
+      ></i>
+      <div id="file-screen">
+        <a
+          href="javascript:void(0)"
+          class="w3-hide-large w3-red w3-button w3-right w3-margin-top w3-margin-right"
+          onclick="document.getElementById('id01').style.display='block'"
+          ><i class="fa fa-pencil"></i
+        ></a>
+
+        <div id="File1" class="w3-container file">
+          <br />
+          <img
+            class="w3-round  w3-animate-top"
+            src="./fileIcon3.png"
+            style="width:20%;"
+          />
+          <h5 class="w3-opacity">File 1</h5>
+          <h4><i class="fa fa-clock-o"></i> File 1, Sep 27, 2015.</h4>
+          <a class="w3-button w3-light-grey" href="#"
+            >Share<i class="w3-margin-left fa fa-mail-reply"></i
+          ></a>
+          <a class="w3-button w3-light-grey" href="#"
+            >Delete<i class="w3-margin-left fa fa-arrow-right"></i
+          ></a>
+          <hr />
+
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat
+            non proident, sunt in culpa qui officia deserunt mollit anim id est
+            laborum consectetur adipiscing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+            ea commodo consequat.
+          </p>
+        </div>
+
+        <div id="File2" class="w3-container file">
+          <br />
+          <img
+            class="w3-round w3-animate-top"
+            src="./fileIcon5.png"
+            style="width:20%;"
+          />
+          <h5 class="w3-opacity">File 2</h5>
+          <h4><i class="fa fa-clock-o"></i> File 2, Sep 25, 2015.</h4>
+          <a class="w3-button w3-light-grey"
+            >Share<i class="w3-margin-left fa fa-mail-reply"></i
+          ></a>
+          <a class="w3-button w3-light-grey"
+            >Delete<i class="w3-margin-left fa fa-arrow-right"></i
+          ></a>
+          <hr />
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat
+            non proident, sunt in culpa qui officia deserunt mollit anim id est
+            laborum consectetur adipiscing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+            ea commodo consequat.
+          </p>
+        </div>
+
+        <div id="File3" class="w3-container file">
+          <br />
+          <img
+            class="w3-round w3-animate-top"
+            src="./fileIcon2.png"
+            style="width:20%;"
+          />
+          <h5 class="w3-opacity">File 3</h5>
+          <h4><i class="fa fa-clock-o"></i> File 3, Sep 23, 2015.</h4>
+          <a class="w3-button w3-light-grey"
+            >Share<i class="w3-margin-left fa fa-mail-reply"></i
+          ></a>
+          <a class="w3-button w3-light-grey"
+            >Delete<i class="w3-margin-left fa fa-arrow-right"></i
+          ></a>
+          <hr />
+        </div>
+      </div>
+      <div id="shared-file-screen" class="w3-container">
+        <h1>Share File Drive</h1>
+        <h3>Folders</h3>
+		
+	<!--     Aside  -----------------------------------------------------------------     -->
+		<aside>
+		<h3 id = "aside_title" > File Modification History </h3>
+		<h4>Today</h4>
+		<tr>
+		<td>
+		<div
+          class="files"
+          onclick="document.getElementById('id07').style.display='block'"
+        >
+          <img
+            src="./fileIcon2.png"
+            alt=""
+            style="width:15%; margin-left:10px; margin-right: 10px"
+          />
+          game.js
+        </div>
+		</td>
+		<td>15:23 23/05/2020</td>
+		</tr>
+		</br></br>
+		<tr>
+		<td>
+		<div
+          class="files"
+          onclick="document.getElementById('id07').style.display='block'"
+        >
+          <img
+            src="./fileIcon1.png"
+            alt=""
+            style="width:15%; margin-left:10px; margin-right: 10px"
+          />
+          index.php
+        </div>
+		</td>
+		 <td > 11:10 23/05/2020</td>
+		</tr>
+		</br></br>
+		<h4>Yesterday</h4>
+		<tr>
+		<td>
+		 <div
+          class="files"
+          onclick="document.getElementById('id07').style.display='block'"
+        >
+          <img
+            src="./fileIcon1.png"
+            alt=""
+            style="width:15%; margin-left:10px; margin-right: 10px"
+          />
+          river.jpeg
+        </div>
+		</td>
+		<td>17:23 22/05/2020</td>
+		</tr>
+		</br></br>
+		<tr>
+		<td>
+		 <div
+          class="files"
+          onclick="document.getElementById('id07').style.display='block'"
+        >
+          <img
+            src="./fileIcon3.png"
+            alt=""
+            style="width:15%; margin-left:10px; margin-right: 10px"
+          />
+          web.html
+        </div>
+		</td>
+		<td>15:11 22/05/2020</td>
+		</tr>
+		</br></br>
+		<tr>
+		<td>
+		<div
+          class="files"
+          onclick="document.getElementById('id07').style.display='block'"
+        >
+          <img
+            src="./fileIcon3.png"
+            alt=""
+            style="width:15%; margin-left:10px; margin-right: 10px"
+          />
+          logo.png
+        </div>
+		</td>
+		<td>10:40 22/05/2020</td>
+		</tr>
+		</br></br>
+		<h4>This week</h4>
+		<tr>
+		<td>
+		<div
+          class="files"
+          onclick="document.getElementById('id07').style.display='block'"
+        >
+          <img
+            src="./fileIcon2.png"
+            alt=""
+            style="width:15%; margin-left:10px; margin-right: 10px"
+          />
+          panel.cpp
+        </div>
+		</td>
+		<td>17:29 26/05/2020</td>
+		</tr>
+		</br></br>
+	   <h4>This month</h4>
+		<tr>
+		<td>
+		<div
+          class="files"
+          onclick="document.getElementById('id07').style.display='block'"
+        >
+          <img
+            src="./fileIcon2.png"
+            alt=""
+            style="width:15%; margin-left:10px; margin-right: 10px"
+          />
+          home.java
+        </div>
+		</td>
+		<td>09:30 12/05/2020</td>
+		</tr>
+		<tr>
+		</br></br>
+		<td>
+		<div
+          class="files"
+          onclick="document.getElementById('id07').style.display='block'"
+        >
+          <img
+            src="./fileIcon2.png"
+            alt=""
+            style="width:15%; margin-left:10px; margin-right: 10px"
+          />
+          start.exe
+        </div>
+		</td>
+		<td>10:20 01/05/2020</td>
+		</tr>
+		
+		</aside>
+
+  
+        <div
+          class="files"
+          onclick="document.getElementById('id02').style.display='block'"
+        >
+          <img
+            src="./folder.png"
+            alt=""
+            style="width:15%; margin-left:10px; margin-right: 10px"
+          />
+          Infosys321
+        </div>
+		<div
+          class="files"
+          onclick="document.getElementById('id02').style.display='block'"
+        >
+          <img
+            src="./folder.png"
+            alt=""
+            style="width:15%; margin-left:7px; margin-right: 10px"
+          />
+          Compsci345
+        </div>
+        <div
+          class="files"
+          onclick="document.getElementById('id02').style.display='block'"
+        >
+          <img
+            src="./folder.png"
+            alt=""
+            style="width:15%; margin-left:10px; margin-right: 10px"
+          />
+          My web
+        </div>
+        <br /><br/>
+        <h3 style="text-align:left">My Recent File Share History</h3>
+        <div class="w3-panel">
+          <table style="width:70%" ; class="w3-table w3-bordered w3-striped">
+            <tr>
+              <td><h4>Receiver</h4></td>
+              <td><h4>File</h4></td>
+              <td><h4>Date</h4></td>
+			  <td><h4>Modification History<h4></td>
+            </tr>
+            <tr>
+              <td>Jill</td>
+              <td><a href="#">CS373 A2.pdf</a></td>
+              <td>15:23 23/05/2020</td>
+			  <td> <button type="button" class = "ModLog"  onclick="document.getElementById('id07').style.display='block'">Modification Log</button></td>
+            </tr>
+            <tr>
+              <td>Eve, Kim</td>
+              <td><a href="#">index.php</a></td>
+              <td>09:15 20/05/2020</td>
+			  <td> <button type="button" class = "ModLog"  onclick="document.getElementById('id07').style.display='block'">Modification Log</button></td>
+            </tr>
+            <tr>
+              <td>Adam</td>
+              <td><a href="#">Auckland.jpeg</a></td>
+              <td>03:19 27/03/2020</td>
+			  <td> <button type="button" class = "ModLog"  onclick="document.getElementById('id07').style.display='block'">Modification Log</button></td>
+            </tr>
+            <tr>
+              <td>Mike, Bob, Peach</td>
+              <td><a href="#">styles.css</a></td>
+              <td>15:02 20/03/2020</td>
+			  <td> <button type="button" class = "ModLog"  onclick="document.getElementById('id07').style.display='block'">Modification Log</button></td>
+            </tr>
+            <tr>
+              <td>Jason</td>
+              <td><a href="#">game.js</a></td>
+              <td>09:00 20/02/2020</td>
+			  <td> <button type="button" class = "ModLog"  onclick="document.getElementById('id07').style.display='block'">Modification Log</button></td>
+            </tr>
+          </table>
+
+          <!-- <br /> -->
+        </div>
+        <!-- <br /><br /> -->
+        <h3>File shared History</h3>
+        <h4>Today</h4>
+        <div
+          class="files"
+          onclick="document.getElementById('id02').style.display='block'"
+        >
+          <img
+            src="./fileIcon1.png"
+            alt=""
+            style="width:15%; margin-left:10px; margin-right: 10px"
+          />
+          index.php
+        </div>
+        <br /><br />
+        <h4>Yesterday</h4>
+        <div
+          class="files"
+          onclick="document.getElementById('id02').style.display='block'"
+        >
+          <img
+            src="./fileIcon2.png"
+            alt=""
+            style="width:15%; margin-left:10px; margin-right: 10px"
+          />
+          game.js
+        </div>
+        <div
+          class="files"
+          onclick="document.getElementById('id02').style.display='block'"
+        >
+          <img
+            src="./fileIcon1.png"
+            alt=""
+            style="width:15%; margin-left:10px; margin-right: 10px"
+          />
+          mountain.jpeg
+        </div>
+	
+		</br></br>             <!-- line break  -->
+        <div
+          class="files"
+          onclick="document.getElementById('id02').style.display='block'"
+        >
+          <img
+            src="./fileIcon1.png"
+            alt=""
+            style="width:15%; margin-left:10px; margin-right: 10px"
+          />
+          river.jpeg
+        </div>
+        <br /><br />
+        <h4>This week</h4>
+        <div
+          class="files"
+          onclick="document.getElementById('id02').style.display='block'"
+        >
+          <img
+            src="./fileIcon3.png"
+            alt=""
+            style="width:15%; margin-left:10px; margin-right: 10px"
+          />
+          web.html
+        </div>
+        <div
+          class="files"
+          onclick="document.getElementById('id02').style.display='block'"
+        >
+          <img
+            src="./fileIcon1.png"
+            alt=""
+            style="width:15%; margin-left:10px; margin-right: 10px"
+          />
+          logo.png
+        </div>
+        <br /><br />
+        <h4>This month</h4>
+        <div
+          class="files"
+          onclick="document.getElementById('id02').style.display='block'"
+        >
+          <img
+            src="./fileIcon2.png"
+            alt=""
+            style="width:15%; margin-left:10px; margin-right: 10px;"
+          />
+          home.java
+        </div>
+        <div
+          class="files"
+          onclick="document.getElementById('id02').style.display='block'"
+        >
+          <img
+            src="./fileIcon2.png"
+            alt=""
+            style="width:15%; margin-left:10px; margin-right: 10px"
+          />
+          panel.cpp
+        </div>
+        <br /><br />
+        <h4>Last month</h4>
+        <div
+          class="files"
+          onclick="document.getElementById('id02').style.display='block'"
+        >
+          <img
+            src="./fileIcon3.png"
+            alt=""
+            style="width:15%; margin-left:10px; margin-right: 10px"
+          />
+          cs373.txt
+        </div>
+        <div
+          class="files"
+          onclick="document.getElementById('id02').style.display='block'"
+        >
+          <img
+            src="./fileIcon2.png"
+            alt=""
+            style="width:15%; margin-left:10px; margin-right: 10px"
+          />
+          start.exe
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var openInbox = document.getElementById("myBtn");
+      openInbox.click();
+
+      function w3_open() {
+        document.getElementById("mySidebar").style.display = "block";
+        document.getElementById("myOverlay").style.display = "block";
+      }
+
+      function w3_close() {
+        document.getElementById("mySidebar").style.display = "none";
+        document.getElementById("myOverlay").style.display = "none";
+      }
+
+      function myFunc(id) {
+        var x = document.getElementById(id);
+        if (x.className.indexOf("w3-show") == -1) {
+          x.className += " w3-show";
+          x.previousElementSibling.className += " w3-red";
+        } else {
+          x.className = x.className.replace(" w3-show", "");
+          x.previousElementSibling.className = x.previousElementSibling.className.replace(
+            " w3-red",
+            ""
+          );
+        }
+      }
+
+      doShare("File1");
+      function doShare(fileName) {
+        document.getElementById("shared-file-screen").style.display = "none";
+        document.getElementById("file-screen").style.display = "block";
+        var i;
+        var x = document.getElementsByClassName("file");
+        for (i = 0; i < x.length; i++) {
+          x[i].style.display = "none";
+        }
+        x = document.getElementsByClassName("test");
+        for (i = 0; i < x.length; i++) {
+          x[i].className = x[i].className.replace(" w3-light-grey", "");
+        }
+        document.getElementById(fileName).style.display = "block";
+        event.currentTarget.className += " w3-light-grey";
+      }
+
+      function addEmail(name) {
+        const emailaddress = name + "@uoa.com; ";
+
+        if (document.getElementById(name).checked === true) {
+          document.getElementById("email").value += emailaddress;
+        } else {
+          document.getElementById("email").value = document
+            .getElementById("email")
+            .value.replace(emailaddress, "");
+        }
+      }
+    </script>
+
+    <script>
+      var openTab = document.getElementById("firstTab");
+      openTab.click();
+    </script>
+  </body>
+</html>
